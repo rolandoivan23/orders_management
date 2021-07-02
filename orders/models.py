@@ -8,7 +8,7 @@ from customers.models import Customer
 class Order(models.Model):
 	id = models.AutoField(primary_key = True)
 	order_number = models.IntegerField(unique = True)
-	customer_id = models.ForeignKey(Customer, related_name = 'orders', on_delete = models.PROTECT)
+	customer = models.ForeignKey(Customer, related_name = 'orders', on_delete = models.PROTECT)
 	created_date = models.DateField(auto_now_add = True)
 	deliver_date = models.DateField(null = True)
 	urgent = models.BooleanField(default = False)
