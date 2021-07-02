@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render
 
 from articles.models import Article
@@ -39,5 +40,5 @@ def save_order(request):
 
 def orders_report(request):
 	#Ordenes urgentes de clientes platinum que no han sido surtidas
-	orders = Order.objects.filter(order_type_id = 1, urgent = True, customer__tipo_cliente_id = 4, deliver_date__isnull = True).select_related('customer', 'order_type')
+	orders = Order.objects.filter(order_type_id = 1, urgent = True, customer__tipo_cliente_id = 4, deliver_date__isnull = True).annotate(num_articles = Count('articles_details')).select_related('customer', 'order_type')
 	return render(request, 'orders/report.html', {'orders': orders})
