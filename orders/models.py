@@ -16,18 +16,18 @@ class Order(models.Model):
 
 class DetailOrderDistributionCenter(models.Model):
 	id = models.AutoField(primary_key = True)
-	order = models.ForeignKey(Order, related_name = 'distribution_center_orders', on_delete = models.PROTECT)
+	order = models.OneToOneField(Order, related_name = 'distribution_center_details', on_delete = models.PROTECT)
 	warehouse = models.ForeignKey(Warehouse, related_name = 'orders', on_delete = models.PROTECT)
 
 class DetailOrderBranchOffice(models.Model):
 	id = models.AutoField(primary_key = True)
-	order = models.ForeignKey(Order, related_name = 'branch_office_orders', on_delete = models.PROTECT)
+	order = models.OneToOneField(Order, related_name = 'branch_office_details', on_delete = models.PROTECT)
 	reference = models.CharField(max_length = 20)
 	branch_office_code = models.IntegerField()
 
 class DetailOrderAssociatedCompany(models.Model):
 	id = models.AutoField(primary_key = True)
-	order = models.ForeignKey(Order, related_name = 'associated_company_orders', on_delete = models.PROTECT)
+	order = models.OneToOneField(Order, related_name = 'associated_company_details', on_delete = models.PROTECT)
 	reference = models.CharField(max_length = 20)
 	partner_code = models.IntegerField()
 
