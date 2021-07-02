@@ -25,7 +25,7 @@ def save_order(request):
 		order = Order(order_type_id = order_type_id, order_number = Order.objects.count() + 1, customer_id = 1, urgent = isUrgent)
 		order.save()
 		for article in json.loads(request.POST.get('articles')):
-			print(article['quantity'])
+			#print(article['quantity'])
 			ArticlesOrder.objects.create(order = order, article_id = article['article_id'], quantity = article['quantity'])
 
 		if order_type_id == 1:
@@ -36,3 +36,8 @@ def save_order(request):
 			DetailOrderAssociatedCompany.objects.create(order = order,reference = request.POST.get('reference'), partner_code = request.POST.get('partner_code'))
 
 		return render(request, 'orders/make_order.html')
+
+def orders_report(request):
+	#Ordenes urgentes de clientes platinum que no han sido surtidas
+	orders = Order.objects.filter(order_type_id = 1, urgent = True, customer__tipo_cliente_id = 4, deliver_date__isnull = True).select_related('customer', 'order_type')
+	return render(request, 'orders/report.html', {'orders': orders})

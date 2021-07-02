@@ -1,0 +1,26 @@
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Número Orden</th>
+			<th>Cliente</th>
+			<th>Fecha Orden</th>
+			<th>Fecha Entrega</th>
+			<th>Tipo de Orden</th>
+			<th>Es Urgente</th>
+			<th>Cantidad de artículos</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for order in orders %}
+			<tr>
+				<td> {{ order.order_number }} </td>
+				<td> {{ order.customer.name }} </td>
+				<td> {{ order.created_date }} </td>
+				<td> {{ order.deliver_date }} </td>
+				<td> {{ order.order_type.name }} </td>
+				<td> {{ order.urgent }} </td>
+				<td> {{ order.articles_details.count }} </td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
