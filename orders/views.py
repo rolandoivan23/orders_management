@@ -2,11 +2,14 @@ from django.db.models import Count
 from django.shortcuts import render
 from django.core import serializers
 
+import json
+
+from rest_framework import viewsets
+
 from articles.models import Article
 
 from orders.models import *
-
-import json
+from orders.serializers import *
 # Create your views here.
 
 def make_order(request):
@@ -43,3 +46,7 @@ def orders_report(request):
 	#Ordenes urgentes de clientes platinum que no han sido surtidas
 	orders = Order.objects.filter(order_type_id = 1, urgent = True, customer__tipo_cliente_id = 4, deliver_date__isnull = True).annotate(num_articles = Count('articles_details')).select_related('customer', 'order_type')
 	return render(request, 'orders/report.html', {'orders': orders})
+
+class OrdersViewSet(viewsets.ModelViewSet):
+	queryset = Order.objects.all()
+	serializer_class = OrderSerializer

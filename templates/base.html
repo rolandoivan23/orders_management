@@ -56,8 +56,14 @@
   
         <script>
             $(function () {
-                let data = [{order_number:1}];
-                $("#buttonContainer").dxDataGrid({columns: ['order_number', 'type', 'customer', 'created_date', 'delivery_date', 'urgent', 'num_articles'], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true});
+                $.get('/api/v1/orders').then(function(resp){
+                    let data = resp;
+                    console.log(data);
+                    $("#buttonContainer").dxDataGrid({columns: ['order_number', {dataField: 'order_type',  caption: 'Type'}, 'customer', 'created_date', 'deliver_date', 'urgent', 'num_articles'], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true, filterRow: {visible: true}});
+
+                }, function(error){
+
+                })
             });
         </script>
 

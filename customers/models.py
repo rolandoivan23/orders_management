@@ -9,3 +9,6 @@ class Customer(models.Model):
 	code = models.CharField(max_length = 10)
 	address = models.CharField(max_length = 120)
 	tipo_cliente = models.ForeignKey(CustomerType, related_name = 'customers', on_delete = models.PROTECT)
+
+	def __str__(self):
+		return self.name

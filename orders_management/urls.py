@@ -15,13 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from orders.views import make_order, save_order, orders_report
+
+from rest_framework.routers import SimpleRouter
+
+from orders.views import OrdersViewSet
+
+router = SimpleRouter()
+router.register(r'orders', OrdersViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^make_order$', make_order, name = 'make_order'),
     url(r'^save_order$', save_order, name = 'save_order'),
-    url(r'^orders_report$', orders_report, name = 'orders_report')
+    url(r'^orders_report$', orders_report, name = 'orders_report'),
+    url(r'api/v1/', include(router.urls)),
 ]
