@@ -25,6 +25,12 @@
 
             {% block personal_styles %}{% endblock personal_styles %}
         </style>
+
+
+    <!-- DevExtreme theme -->
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/21.1.4/css/dx.light.css">
+ 
+    
         <!--
         <script src="https://use.fontawesome.com/76790a708b.js"></script>
         -->
@@ -44,7 +50,17 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+        <!-- DevExtreme library -->
+        <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/21.1.4/js/dx.all.js"></script>
   
+        <script>
+            $(function () {
+                let data = [{order_number:1}];
+                $("#buttonContainer").dxDataGrid({columns: ['order_number', 'type', 'customer', 'created_date', 'delivery_date', 'urgent', 'num_articles'], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true});
+            });
+        </script>
+
         {% block scripts_js %} {% endblock scripts_js %}
     </body>
 </html>
