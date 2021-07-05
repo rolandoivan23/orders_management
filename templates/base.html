@@ -39,7 +39,43 @@
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        <style>
+             #main-navbar{
+                background: #555;
+                height: 42px;
+              }
 
+              #main-navbar a {
+                color: aliceblue;
+                background: rgba(123, 123, 128, 0.15);
+              }
+
+              #main-navbar ul{
+                margin-top: 0; 
+              }
+
+              #main-navbar ul li{
+                color: aliceblue;
+                list-style-type: none;
+                display: inline-block;
+                width: 180px;
+                padding: 3px;
+                margin: 7px 10px;
+                text-align: center;
+                max-height: 28px;
+                background: rgba(123, 123, 128, 0.15);
+              }
+              #main-navbar ul li:hover{
+                cursor: pointer;
+                background: rgba(123, 123, 128, 1);
+              }
+        </style>
+         <nav id="main-navbar" style="margin-top: -46px;">
+              <ul>
+                <li>  <a href="{% url 'make_order' %}">Hacer Pedido</a>  </li>
+                <li>  <a href="{% url 'orders_report' %}">Reporte de Ordenes</a>   </li>
+              </ul>
+            </nav>
         <div class="content">
             {% block contenido %}{% endblock contenido %}
         </div>
@@ -51,6 +87,7 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
         <!-- DevExtreme library -->
         <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/21.1.4/js/dx.all.js"></script>
   
@@ -59,7 +96,13 @@
                 $.get('/api/v1/orders').then(function(resp){
                     let data = resp;
                     console.log(data);
-                    $("#buttonContainer").dxDataGrid({columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true, filterRow: {visible: true}});
+                   
+                    $("#buttonContainer").dxDataGrid({columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true, filterRow: {visible: true}, grouping:{ texts:{ groupContinuesMessage: "Continúa en la página siguiente" }}, groupPanel: {visible: true, emptyPanelText: "Arrastre aquí la columna para agrupar"},
+                        export: {enabled: true, fileName: 'sss', allowExportSelectedData: true, 
+                            excelFilterEnabled: true, excelWrapTextEnabled: true, texts: {exportAll: 'Exportar Todo', exportSelectedRows: 'Exportar Selección'}}
+                });
+
+                  
 
                 }, function(error){
 

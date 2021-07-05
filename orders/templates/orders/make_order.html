@@ -36,26 +36,41 @@
 
 					<br>
 					<div id="detail-warehouse-container">
-						<label >Almacen</label>
-						<input type="text" name="warehouse" placeholder="Número de almacen">
+						<div class="row">
+							<div class="col-sm-12 col-md-5">
+								<label >Almacen</label>
+								<input class="form-control form-control-sm" type="text" name="warehouse" placeholder="Número de almacen">
+							</div>
+						</div>
 					</div>
 					<div id="detail-sucursal-container" style="display: none;">
-						<label >Reference</label>
-						<input type="text" name="reference">
-						<label >Código Sucursal</label>
-						<input type="text" name="sucursal_code">
+						<div class="row">
+							<div class="col-sm-12 col-md-6">
+								<label >Reference</label>
+								<input class="form-control form-control-sm" type="text" name="reference" placeholder="Ej, OU51214-CH03">
+							</div>
+							<div class="col-sm-12 col-md-6">
+								<label >Código Sucursal</label>
+								<input class="form-control form-control-sm" type="text" name="sucursal_code" placeholder="Introduzca el código de la sucursal">
+							</div>
+						</div>
 					</div>
 					<div id="detail-associatedcompany-container" style="display: none;">
-						<label >Referencia</label>
-						<input type="text" name="reference">
-						<label>Código del socio</label>
-						<input type="text" name="member_code">
+						<div class="row">
+							<div class="col-sm-12 col-md-6">
+								<label >Referencia</label>
+								<input  placeholder="Ej, OU51214-CH03" class="form-control form-control-sm" type="text" name="reference">
+							</div>
+							<div class="col-sm-12 col-md-6">
+								<label>Código del socio</label>
+								<input class="form-control form-control-sm" type="text" name="member_code" placeholder="Introduzca el código del socio">
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-3">
-					
-					<span>La orden es urgente: </span>
-					<span> <input type="checkbox" name="urgent"> </span>
+					<label class="form-check-label" for="chkUrgent"> La orden es urgente:</label>
+					 <input id="chkUrgent" class="form-check-input" type="checkbox" name="urgent"> 
 				</div>
 			</div>
 
