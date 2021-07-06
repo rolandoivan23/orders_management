@@ -101,7 +101,7 @@
                     console.log(data);
                    
                     $("#buttonContainer").dxDataGrid({columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true, filterRow: {visible: true}, grouping:{ texts:{ groupContinuesMessage: "Continúa en la página siguiente" }}, groupPanel: {visible: true, emptyPanelText: "Arrastre aquí la columna para agrupar"},
-                        export: {enabled: true, fileName: 'sss', allowExportSelectedData: true, 
+                        export: {enabled: true, fileName: 'orders_report', allowExportSelectedData: true, 
                             excelFilterEnabled: true, excelWrapTextEnabled: true, texts: {exportAll: 'Exportar Todo', exportSelectedRows: 'Exportar Selección'}}
                     });
                   
@@ -112,13 +112,19 @@
                 $.get('/api/v1/articles').then(
                     resp => {
                         articles = resp;
-                        $('#grid-articulos').dxDataGrid({noDataText: 'Sin artículos', filterRow: {visible: true}, height: '225px', columns: ['code', 'description', {caption: 'Add', alignment: 'center', cellTemplate: function(cont, ops){cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}');">+</div>`);} }], dataSource: articles, onRowDblClick: (elem)=> add_article_to_order(elem.data.id, elem.data.code, elem.data.description)});
+                        $('#grid-articulos').dxDataGrid({noDataText: 'Sin artículos', filterRow: {visible: true}, height: '225px', columns: ['code', 'description', {dataField:'price', format: {type: 'fixedPoint', precision: 2}, dataType: 'number'}, {caption: 'Add', alignment: 'center', cellTemplate: function(cont, ops){cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}', ${ops.data.price});">+</div>`);} }], dataSource: articles, onRowDblClick: (elem)=> add_article_to_order(elem.data.id, elem.data.code, elem.data.description, elem.data.price)});
                         instanceGridArticles = $('#grid-articulos').dxDataGrid('instance');
                     }, error => {
                         alert('error al buscar artículos');
                     }
                 );
             });
+
+            $.get('/api/v1/warehouses').then(resp=> {
+                $('#cmb-warehouses').dxLookup({ dataSource: resp, displayExpr: 'code', valueExpr: 'id', placeholder: 'Seleccione el almacen', title: 'Warehouse', name: 'warehouse'})
+
+            });
+           
         </script>
 
         {% block scripts_js %} {% endblock scripts_js %}

@@ -39,7 +39,11 @@
 						<div class="row">
 							<div class="col-sm-12 col-md-5">
 								<label >Almacen</label>
-								<input class="form-control form-control-sm" type="text" name="warehouse" placeholder="Número de almacen">
+								<div class="dx-field">
+									<div id="cmb-warehouses"></div>
+									
+								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -81,7 +85,7 @@
 	<div class="row">
 
 		<div class="col-sm-12 col-md-7 bordered">
-			<h5>Articulos de la orden</h5>
+			<h5>Artículos de la orden</h5>
 			<hr>
 			<table id="articles-order-table" class="table table-striped table-bordered">
 				<thead>
@@ -89,6 +93,7 @@
 						<th>Code</th>
 						<th>Description</th>
 						<th>Quantity</th>
+						<th>Price</th>
 						<th>Subtotal</th>
 					</tr>
 				</thead>
@@ -106,7 +111,7 @@
 			center;">
 				<!--<label>Articulo</label>
 				<input type="text" name="article_finder" class="input" />-->
-				<h5>Listado de articulos</h5>
+				<h5>Listado de artículos</h5>
 				<div id="grid-articulos"></div>
 				
 			</div>
@@ -125,14 +130,15 @@
 
 		let order_articles = [];
 
-		function add_article_to_order(article_id, code, desc) {
+		function add_article_to_order(article_id, code, desc, price) {
 			let quantity = prompt('Introduzca la cantidad de articulos a agregar:');
 			if(parseInt(quantity) > 0){
 				$('#articles-order-table tbody').append(`<tr>\
 					<td>${code}</td> \
 					<td>${desc}</td> \
 					<td>${quantity}</td> \
-					<td></td> \
+					<td>${price}</td> \
+					<td>${quantity*price}</td> \
 				</tr>`);
 				order_articles.push({article_id: article_id, quantity: quantity});
 				articles.length = 0;

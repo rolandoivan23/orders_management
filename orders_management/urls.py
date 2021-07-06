@@ -29,6 +29,7 @@ router = SimpleRouter()
 router.register(r'orders', OrdersViewSet)
 router.register(r'articles', ArticlesViewSet)
 router.register(r'order_types', OrderTypeViewSet)
+router.register(r'warehouses', WarehouseViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

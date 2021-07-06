@@ -7,3 +7,7 @@ from .serializers import *
 class OrderTypeViewSet(viewsets.ModelViewSet):
 	queryset = OrderType.objects.all()
 	serializer_class = OrderTypeSerializer
+
+class WarehouseViewSet(viewsets.ModelViewSet):
+	queryset = Warehouse.objects.all()
+	serializer_class = WarehouseSerializer
