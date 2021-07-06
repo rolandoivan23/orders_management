@@ -91,10 +91,17 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
         <!-- DevExtreme library -->
         <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/21.1.4/js/dx.all.js"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+        <!-- Default theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
   
         <script>
             var articles = [];
             var instanceGridArticles = null;
+            var validator_warehouse, validator_sucursal, validator_associatedCompany;
             $(function () {
                 $.get('/api/v1/orders/?urgent=True&order_type_id=1&deliver_date__isnull=True&customer__tipo_cliente_id=4').then(function(resp){
                     let data = resp;
@@ -120,12 +127,30 @@
                 );
             });
 
+            validator_warehouse = $('#detail-warehouse-container').dxValidationGroup({});
+            validator_sucursal = $('#detail-sucursal-container').dxValidationGroup({});
+            validator_associatedCompany = $('#detail-associatedcompany-container').dxValidationGroup({});
+
             $.get('/api/v1/warehouses').then(resp=> {
-                $('#cmb-warehouses').dxLookup({ dataSource: resp, displayExpr: 'code', valueExpr: 'id', placeholder: 'Seleccione el almacen', title: 'Warehouse', name: 'warehouse'})
+                $('#cmb-warehouses').dxLookup({ dataSource: resp, displayExpr: 'code', valueExpr: 'id', placeholder: 'Seleccione el almacen', title: 'Warehouse', name: 'warehouse'}).dxValidator({validationRules: [{type: 'required', message: 'Field Required'}], validationGroup: validator_warehouse});
 
             });
+
+            $('#reference-input').dxTextBox({name: 'reference', placeholder: 'Introduzca la referenia. Ej: OU008236-CH03'}).dxValidator({validationRules: [{type: 'required', message: 'Field Required'}], validationGroup: validator_sucursal});
+
+            $('#sucursal-code-input').dxTextBox({name: 'sucursal_code',
+                placeholder: 'Introduzca el código de la sucursal'}).dxValidator({validationRules: [{type: 'required', message:'Sucursal Code Required'}], validationGroup: validator_sucursal});
+
+            $('#reference-associated-input').dxTextBox({name: 'reference',
+                placeholder: 'Ej, OU51214-CH03'}).dxValidator({validationRules: [{type: 'required', message:'Member Code Required'}], validationGroup: validator_associatedCompany});
+
+
+            $('#member-code-input').dxTextBox({name: 'member_code',
+                placeholder: 'Introduzca el código del socio'}).dxValidator({validationRules: [{type: 'required', message:'Member Code Required'}], validationGroup: validator_associatedCompany});
+
            
         </script>
+
 
         {% block scripts_js %} {% endblock scripts_js %}
     </body>

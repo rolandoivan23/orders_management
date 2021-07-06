@@ -51,11 +51,11 @@
 						<div class="row">
 							<div class="col-sm-12 col-md-6">
 								<label >Reference</label>
-								<input class="form-control form-control-sm" type="text" name="reference" placeholder="Ej, OU51214-CH03">
+								<div id="reference-input" ></div>
 							</div>
 							<div class="col-sm-12 col-md-6">
 								<label >Código Sucursal</label>
-								<input class="form-control form-control-sm" type="text" name="sucursal_code" placeholder="Introduzca el código de la sucursal">
+								<div id="sucursal-code-input"></div>
 							</div>
 						</div>
 					</div>
@@ -63,11 +63,11 @@
 						<div class="row">
 							<div class="col-sm-12 col-md-6">
 								<label >Referencia</label>
-								<input  placeholder="Ej, OU51214-CH03" class="form-control form-control-sm" type="text" name="reference">
+								<div id="reference-associated-input"  ></div>
 							</div>
 							<div class="col-sm-12 col-md-6">
 								<label>Código del socio</label>
-								<input class="form-control form-control-sm" type="text" name="member_code" placeholder="Introduzca el código del socio">
+								<div id="member-code-input" ></div>
 							</div>
 						</div>
 					</div>
@@ -84,7 +84,7 @@
 	</div>
 	<div class="row">
 
-		<div class="col-sm-12 col-md-7 bordered">
+		<div class="col-sm-12 col-md-7 bordered" style="border-top: 0;">
 			<h5>Artículos de la orden</h5>
 			<hr>
 			<table id="articles-order-table" class="table table-striped table-bordered">
@@ -102,11 +102,13 @@
 				</tbody>
 			</table>
 			<div class="row">
-				<div class="col-sm-12 col-md-3 offset-md-7"><b>Total: $ </b></div>
+				<div id="total-container" class="col-sm-12 col-md-3 offset-md-9">
+					<b>Total: $ <span id="total-value">0.00</span> </b>
+				</div>
 			</div>
 			
 		</div>
-		<div class="col-sm-12 col-md-5 bordered">
+		<div class="col-sm-12 col-md-5 bordered" style="border-left: 0; border-top: 0;">
 			<div class="field-container" style="text-align: 
 			center;">
 				<!--<label>Articulo</label>
@@ -131,22 +133,33 @@
 		let order_articles = [];
 
 		function add_article_to_order(article_id, code, desc, price) {
-			let quantity = prompt('Introduzca la cantidad de articulos a agregar:');
-			if(parseInt(quantity) > 0){
-				$('#articles-order-table tbody').append(`<tr>\
-					<td>${code}</td> \
-					<td>${desc}</td> \
-					<td>${quantity}</td> \
-					<td>${price}</td> \
-					<td>${quantity*price}</td> \
-				</tr>`);
-				order_articles.push({article_id: article_id, quantity: quantity});
-				articles.length = 0;
-				instanceGridArticles.refresh();
+			let quantity;
 
-			}else if(quantity != null){
-				alert('No es una cantidad valida');
-			}
+			alertify.prompt( 'Artículos a agregar', '', 
+                function(evt, value) { 
+               		quantity = value;
+					if(parseInt(quantity) > 0){
+						$('#articles-order-table tbody').append(`<tr>\
+							<td>${code}</td> \
+							<td>${desc}</td> \
+							<td>${quantity}</td> \
+							<td>${price}</td> \
+							<td>${quantity*price}</td> \
+						</tr>`);
+						let total_elem = $('#total-container #total-value');
+						total_elem.html(parseFloat((total_elem.html()) + quantity*price).toFixed(2))
+						order_articles.push({article_id: article_id, quantity: quantity});
+						articles.length = 0;
+						let index;
+						articles.find((elem, i)=>{index = i; elem.id == article_id});
+						articles.slice(index, 1);
+						instanceGridArticles.refresh();
+
+					}else if(quantity != null){
+						alert('No es una cantidad valida');
+					}
+                }
+            );
 		}
 
 		function check_order_type(selection){
@@ -166,38 +179,63 @@
 			}
 		}
 
+		function articlesAdded(){
+			if(order_articles.length == 0){
+				alertify.error('No ha agregado artículos');
+				return false
+			};
+			return true;
+		}
+		const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 		function save_order(){
 			//let order_type_id = parseInt($('input[name=order_type]:checked')[0].value());
 			//alert(order_articles);
-			const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 			
-			
-			data = { 
-		           articles: JSON.stringify(order_articles),
-		           order_type_id: parseInt($('input[name=order_type]:checked')[0].value),
-		           urgent: $('input[name=urgent]').is(':checked'),
-		           csrfmiddlewaretoken: csrftoken
-		       };
+			let order_type_id = parseInt($('input[name=order_type]:checked')[0].value);
+			let validator;
+			switch(order_type_id){
+				//Distribution Center
+				case 1: validator = validator_warehouse;
+					break;
+				//Sucursal
+				case 2: validator = validator_sucursal;
+					break;
+				//Associated Company
+				case 3: validator = validator_associatedCompany;
+					break;
+				default: alertify.error('Tipo de orden invalido');
+					return;
+			}
 
-		      //ALMACEN
-		     if(parseInt($('input[name=order_type]:checked')[0].value) == 1){
-		           data.warehouse_id = parseInt($('input[name=warehouse]')[0].value);
-		     }
-		     if(parseInt($('input[name=order_type]:checked')[0].value) == 2 ){
-		           data.reference = $('input[name=reference]')[0].value;
-		           data.sucursal_code = $('input[name=sucursal_code]')[0].value;
-		     }
-		     if(parseInt($('input[name=order_type]:checked')[0].value) == 3  ){
-		           data.reference =  $('input[name=reference]')[0].value;
-		           data.partner_code = $('input[name=sucursal_code]')[0].value;
-		     }
+			if(DevExpress.validationEngine.validateGroup(validator).isValid && articlesAdded()){
+				data = { 
+			           articles: JSON.stringify(order_articles),
+			           order_type_id: order_type_id,
+			           urgent: $('input[name=urgent]').is(':checked'),
+			           csrfmiddlewaretoken: csrftoken
+			       };
 
-			 $.post('/save_order', data).then(resp => {
-			 	alert('Orden guardada');
-			 }, error => {
-			 	console.error('Error al guardar la orden' + error);
-			 	alert('Error al guardar');
-			 });
+			      //ALMACEN
+			     if(parseInt($('input[name=order_type]:checked')[0].value) == 1){
+			           data.warehouse_id = parseInt($('input[name=warehouse]')[0].value);
+			     }
+			     if(parseInt($('input[name=order_type]:checked')[0].value) == 2 ){
+			           data.reference = $('input[name=reference]')[0].value;
+			           data.sucursal_code = $('input[name=sucursal_code]')[0].value;
+			     }
+			     if(parseInt($('input[name=order_type]:checked')[0].value) == 3  ){
+			           data.reference =  $('input[name=reference]')[0].value;
+			           data.partner_code = $('input[name=sucursal_code]')[0].value;
+			     }
+
+				 $.post('/save_order', data).then(resp => {
+				 	alertify.success('Orden guardada');
+				 }, error => {
+				 	console.error('Error al guardar la orden. ' + error);
+				 	alertify.error('Error al guardar');
+				 });
+			}
+
 		}
 	</script>
 </div>
