@@ -107,7 +107,15 @@
                     let data = resp;
                     console.log(data);
                    
-                    $("#buttonContainer").dxDataGrid({columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}], noDataText: 'Sin ordenes', dataSource: data, showBorders: true, columnAutoWidth: true, filterRow: {visible: true}, grouping:{ texts:{ groupContinuesMessage: "Continúa en la página siguiente" }}, groupPanel: {visible: true, emptyPanelText: "Arrastre aquí la columna para agrupar"},
+                    $("#buttonContainer").dxDataGrid({
+                        columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}],
+                        noDataText: 'Sin ordenes',
+                        dataSource: data,
+                        showBorders: true,
+                        columnAutoWidth: true,
+                        filterRow: {visible: true},
+                        grouping:{ texts:{ groupContinuesMessage: "Continúa en la página siguiente" }},
+                        groupPanel: {visible: true, emptyPanelText: "Arrastre aquí la columna para agrupar"},
                         export: {enabled: true, fileName: 'orders_report', allowExportSelectedData: true, 
                             excelFilterEnabled: true, excelWrapTextEnabled: true, texts: {exportAll: 'Exportar Todo', exportSelectedRows: 'Exportar Selección'}}
                     });
@@ -119,7 +127,20 @@
                 $.get('/api/v1/articles').then(
                     resp => {
                         articles = resp;
-                        $('#grid-articulos').dxDataGrid({noDataText: 'Sin artículos', filterRow: {visible: true}, height: '225px', columns: ['code', 'description', {dataField:'price', format: {type: 'fixedPoint', precision: 2}, dataType: 'number'}, {caption: 'Add', alignment: 'center', cellTemplate: function(cont, ops){cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}', ${ops.data.price});">+</div>`);} }], dataSource: articles, onRowDblClick: (elem)=> add_article_to_order(elem.data.id, elem.data.code, elem.data.description, elem.data.price)});
+                        $('#grid-articulos').dxDataGrid({noDataText: 'Sin artículos',
+                                                        filterRow: {visible: true},
+                                                        height: '225px',
+                                                        columns: ['code',
+                                                        'description',
+                                                        {dataField:'price',
+                                                        format: {type: 'fixedPoint',
+                                                        precision: 2},
+                                                        dataType: 'number'},
+                                                        {caption: 'Add',
+                                                        alignment: 'center',
+                                                        cellTemplate: function(cont, ops){
+                                                            cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}', ${ops.data.price});">+</div>`);} }], dataSource: articles,
+                                                        onRowDblClick: (elem)=> add_article_to_order(elem.data.id, elem.data.code, elem.data.description, elem.data.price)});
                         instanceGridArticles = $('#grid-articulos').dxDataGrid('instance');
                     }, error => {
                         alert('error al buscar artículos');
@@ -132,21 +153,44 @@
             validator_associatedCompany = $('#detail-associatedcompany-container').dxValidationGroup({});
 
             $.get('/api/v1/warehouses').then(resp=> {
-                $('#cmb-warehouses').dxLookup({ dataSource: resp, displayExpr: 'code', valueExpr: 'id', placeholder: 'Seleccione el almacen', title: 'Warehouse', name: 'warehouse'}).dxValidator({validationRules: [{type: 'required', message: 'Field Required'}], validationGroup: validator_warehouse});
+                $('#cmb-warehouses').dxLookup({ dataSource: resp,
+                                                displayExpr: 'code',
+                                                valueExpr: 'id',
+                                                placeholder: 'Seleccione el almacen',
+                                                title: 'Warehouse',
+                                                name: 'warehouse'})
+                                    .dxValidator({validationRules: [
+                                                    {type: 'required',
+                                                    message: 'Field Required'}],
+                                                  validationGroup: validator_warehouse});
 
             });
 
-            $('#reference-input').dxTextBox({name: 'reference', placeholder: 'Introduzca la referenia. Ej: OU008236-CH03'}).dxValidator({validationRules: [{type: 'required', message: 'Field Required'}], validationGroup: validator_sucursal});
+            $('#reference-input').dxTextBox({name: 'reference', 
+                                            placeholder: 'Introduzca la referenia. Ej: OU008236-CH03'})
+                                 .dxValidator({validationRules: [
+                                                    {type: 'required', 
+                                                    message: 'Field Required'}], 
+                                               validationGroup: validator_sucursal});
 
             $('#sucursal-code-input').dxTextBox({name: 'sucursal_code',
-                placeholder: 'Introduzca el código de la sucursal'}).dxValidator({validationRules: [{type: 'required', message:'Sucursal Code Required'}], validationGroup: validator_sucursal});
+                                                 placeholder: 'Introduzca el código de la sucursal'})
+                                     .dxValidator({validationRules: [{type: 'required', 
+                                                                      message:'Sucursal Code Required'}], 
+                                                  validationGroup: validator_sucursal});
 
             $('#reference-associated-input').dxTextBox({name: 'reference',
-                placeholder: 'Ej, OU51214-CH03'}).dxValidator({validationRules: [{type: 'required', message:'Member Code Required'}], validationGroup: validator_associatedCompany});
+                                                        placeholder: 'Ej, OU51214-CH03'})
+                                            .dxValidator({validationRules: [{type: 'required',
+                                                                            message:'Member Code Required'}], 
+                                                        validationGroup: validator_associatedCompany});
 
 
             $('#member-code-input').dxTextBox({name: 'member_code',
-                placeholder: 'Introduzca el código del socio'}).dxValidator({validationRules: [{type: 'required', message:'Member Code Required'}], validationGroup: validator_associatedCompany});
+                                               placeholder: 'Introduzca el código del socio'})
+                                    .dxValidator({validationRules: [{type: 'required', 
+                                                                    message:'Member Code Required'}], 
+                                                validationGroup: validator_associatedCompany});
 
            
         </script>
