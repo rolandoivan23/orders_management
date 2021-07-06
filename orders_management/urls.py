@@ -18,6 +18,8 @@ from django.urls import path
 from django.conf.urls import url, include
 
 from orders.views import make_order, save_order, orders_report
+from articles.views import ArticlesViewSet
+from catalogs.views import *
 
 from rest_framework.routers import SimpleRouter
 
@@ -25,6 +27,8 @@ from orders.views import OrdersViewSet
 
 router = SimpleRouter()
 router.register(r'orders', OrdersViewSet)
+router.register(r'articles', ArticlesViewSet)
+router.register(r'order_types', OrderTypeViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

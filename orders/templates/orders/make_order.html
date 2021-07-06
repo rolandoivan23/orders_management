@@ -107,25 +107,10 @@
 				<!--<label>Articulo</label>
 				<input type="text" name="article_finder" class="input" />-->
 				<h5>Listado de articulos</h5>
-				<table  class="table table-bordered">
-					<thead>
-						<tr>
-							<th>Code</th>
-							<th>Description</th>
-							<th>Add to Order</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for article in articles %}
-							<tr>
-								<td> {{ article.code }} </td>
-								<td> {{ article.description }} </td>
-								<td> <div class="btn btn-outline-dark btn-sm" onclick="add_article_to_order({{article.id}}, '{{ article.code }}', '{{ article.description }}');">+</div></td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+				<div id="grid-articulos"></div>
+				
 			</div>
+			<small style="font-size: 9px; position: relative; bottom: -18px;">Doble click para agregar o con el botón +</small>
 		</div>
 	</div>
 	<div class="row">
@@ -150,6 +135,9 @@
 					<td></td> \
 				</tr>`);
 				order_articles.push({article_id: article_id, quantity: quantity});
+				articles.length = 0;
+				instanceGridArticles.refresh();
+
 			}else if(quantity != null){
 				alert('No es una cantidad valida');
 			}
@@ -198,7 +186,12 @@
 		           data.partner_code = $('input[name=sucursal_code]')[0].value;
 		     }
 
-			 $.post('/save_order', data);
+			 $.post('/save_order', data).then(resp => {
+			 	alert('Orden guardada');
+			 }, error => {
+			 	console.error('Error al guardar la orden' + error);
+			 	alert('Error al guardar');
+			 });
 		}
 	</script>
 </div>

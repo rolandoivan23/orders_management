@@ -50,3 +50,10 @@ def orders_report(request):
 class OrdersViewSet(viewsets.ModelViewSet):
 	queryset = Order.objects.all()
 	serializer_class = OrderSerializer
+	#filter_fields = ('urgent','order_type_id', {'deliver_date': ['exact', 'isnull']},'customer__tipo_cliente_id')
+	filter_fields = {
+		'urgent': ['exact'],
+		'order_type_id': ['exact'],
+		'deliver_date': ['exact', 'isnull'],
+		'customer__tipo_cliente_id': ['exact']
+	}
