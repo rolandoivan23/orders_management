@@ -13,11 +13,16 @@
 	}
 </style>
 <div class="container">
-	<h1>Orders Maker</h1>
-
-
-
-
+	<div class="row">
+		<div class="col-sm-12 col-md-9">
+			<h1>Orders Maker</h1>
+			
+		</div>
+		<div id="order-number-container" class="col-sm-12 col-md-3" style="display: 
+		none;">
+			<b>Order Number: <span id="order-number-value"></span></b>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-sm-12 bordered">
 			<h6>Datos Generales</h6>
@@ -122,122 +127,9 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-12 text-center mt-3 mb-2">
-			<button class="btn btn-success" onclick="save_order();">MAKE ORDER</button>
+			<button id="btn-make-order" class="btn btn-success" onclick="save_order();">MAKE ORDER</button>
 		</div>
 	</div>
-
-
-	
-	<script>
-
-		let order_articles = [];
-
-		function add_article_to_order(article_id, code, desc, price) {
-			let quantity;
-
-			alertify.prompt( 'Artículos a agregar', '', 
-                function(evt, value) { 
-               		quantity = value;
-					if(parseInt(quantity) > 0){
-						$('#articles-order-table tbody').append(`<tr>\
-							<td>${code}</td> \
-							<td>${desc}</td> \
-							<td>${quantity}</td> \
-							<td>${price}</td> \
-							<td>${quantity*price}</td> \
-						</tr>`);
-						let total_elem = $('#total-container #total-value');
-						total_elem.html(parseFloat((total_elem.html()) + quantity*price).toFixed(2))
-						order_articles.push({article_id: article_id, quantity: quantity});
-						articles.length = 0;
-						let index;
-						articles.find((elem, i)=>{index = i; elem.id == article_id});
-						articles.slice(index, 1);
-						instanceGridArticles.refresh();
-
-					}else if(quantity != null){
-						alert('No es una cantidad valida');
-					}
-                }
-            );
-		}
-
-		function check_order_type(selection){
-			switch(parseInt(selection.value)){
-				case 1: $('#detail-warehouse-container').css('display', 'block');
-						$('#detail-sucursal-container').css('display', 'none');
-						$('#detail-associatedcompany-container').css('display', 'none');
-					break;
-				case 2: $('#detail-sucursal-container').css('display', 'block'); 
-						$('#detail-warehouse-container').css('display', 'none');
-						$('#detail-associatedcompany-container').css('display', 'none');
-					break;
-				case 3: $('#detail-associatedcompany-container').css('display', 'block'); 
-						$('#detail-sucursal-container').css('display', 'none');
-						$('#detail-warehouse-container').css('display', 'none');
-					break;
-			}
-		}
-
-		function articlesAdded(){
-			if(order_articles.length == 0){
-				alertify.error('No ha agregado artículos');
-				return false
-			};
-			return true;
-		}
-		const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-		function save_order(){
-			//let order_type_id = parseInt($('input[name=order_type]:checked')[0].value());
-			//alert(order_articles);
-			
-			let order_type_id = parseInt($('input[name=order_type]:checked')[0].value);
-			let validator;
-			switch(order_type_id){
-				//Distribution Center
-				case 1: validator = validator_warehouse;
-					break;
-				//Sucursal
-				case 2: validator = validator_sucursal;
-					break;
-				//Associated Company
-				case 3: validator = validator_associatedCompany;
-					break;
-				default: alertify.error('Tipo de orden invalido');
-					return;
-			}
-
-			if(DevExpress.validationEngine.validateGroup(validator).isValid && articlesAdded()){
-				data = { 
-			           articles: JSON.stringify(order_articles),
-			           order_type_id: order_type_id,
-			           urgent: $('input[name=urgent]').is(':checked'),
-			           csrfmiddlewaretoken: csrftoken
-			       };
-
-			      //ALMACEN
-			     if(parseInt($('input[name=order_type]:checked')[0].value) == 1){
-			           data.warehouse_id = parseInt($('input[name=warehouse]')[0].value);
-			     }
-			     if(parseInt($('input[name=order_type]:checked')[0].value) == 2 ){
-			           data.reference = $('input[name=reference]')[0].value;
-			           data.sucursal_code = $('input[name=sucursal_code]')[0].value;
-			     }
-			     if(parseInt($('input[name=order_type]:checked')[0].value) == 3  ){
-			           data.reference =  $('input[name=reference]')[0].value;
-			           data.partner_code = $('input[name=sucursal_code]')[0].value;
-			     }
-
-				 $.post('/save_order', data).then(resp => {
-				 	alertify.success('Orden guardada');
-				 }, error => {
-				 	console.error('Error al guardar la orden. ' + error);
-				 	alertify.error('Error al guardar');
-				 });
-			}
-
-		}
-	</script>
 </div>
 
 {% endblock contenido %}

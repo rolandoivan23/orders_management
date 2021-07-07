@@ -42,6 +42,11 @@ def save_order(request):
 		isUrgent = True if request.POST.get('urgent') == "true" else False
 		order = Order(order_type_id = order_type_id, order_number = Order.objects.count() + 1, customer_id = 1, urgent = isUrgent)
 		order.save()
+		response = {
+			'order_number': order.order_number,
+			'urgent': order.urgent,
+			'order_type': order.order_type.name
+		}
 		for article in json.loads(request.POST.get('articles')):
 			#print(article['quantity'])
 			ArticlesOrder.objects.create(order = order, article_id = article['article_id'], quantity = article['quantity'])
@@ -53,7 +58,7 @@ def save_order(request):
 		elif order_type_id == 3:
 			DetailOrderAssociatedCompany.objects.create(order = order,reference = request.POST.get('reference'), partner_code = request.POST.get('partner_code'))
 
-		return render(request, 'orders/make_order.html')
+		return JsonResponse(response)
 
 def orders_report(request):
 	#Ordenes urgentes de clientes platinum que no han sido surtidas

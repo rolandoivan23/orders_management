@@ -28,13 +28,12 @@
         </style>
 
 
-    <!-- DevExtreme theme -->
-    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/21.1.4/css/dx.light.css">
- 
-    
-        <!--
-        <script src="https://use.fontawesome.com/76790a708b.js"></script>
-        -->
+        <!-- DevExtreme theme -->
+        <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/21.1.4/css/dx.light.css">
+     
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+        <!-- Default theme -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -80,121 +79,8 @@
         <div class="content">
             {% block contenido %}{% endblock contenido %}
         </div>
-    
-
-
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
-        <!-- DevExtreme library -->
-        <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/21.1.4/js/dx.all.js"></script>
-
-        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
-
-        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-        <!-- Default theme -->
-        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
   
-        <script>
-            var articles = [];
-            var instanceGridArticles = null;
-            var validator_warehouse, validator_sucursal, validator_associatedCompany;
-            $(function () {
-                $.get('/api/v1/orders/?urgent=True&order_type_id=1&deliver_date__isnull=True&customer__tipo_cliente_id=4').then(function(resp){
-                    let data = resp;
-                    console.log(data);
-                   
-                    $("#buttonContainer").dxDataGrid({
-                        columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}],
-                        noDataText: 'Sin ordenes',
-                        dataSource: data,
-                        showBorders: true,
-                        columnAutoWidth: true,
-                        filterRow: {visible: true},
-                        grouping:{ texts:{ groupContinuesMessage: "Continúa en la página siguiente" }},
-                        groupPanel: {visible: true, emptyPanelText: "Arrastre aquí la columna para agrupar"},
-                        export: {enabled: true, fileName: 'orders_report', allowExportSelectedData: true, 
-                            excelFilterEnabled: true, excelWrapTextEnabled: true, texts: {exportAll: 'Exportar Todo', exportSelectedRows: 'Exportar Selección'}}
-                    });
-                  
-                }, function(error){
-                    alert('Error al cargar las ordenes');
-                });
-
-                $.get('/api/v1/articles').then(
-                    resp => {
-                        articles = resp;
-                        $('#grid-articulos').dxDataGrid({noDataText: 'Sin artículos',
-                                                        filterRow: {visible: true},
-                                                        height: '225px',
-                                                        columns: ['code',
-                                                        'description',
-                                                        {dataField:'price',
-                                                        format: {type: 'fixedPoint',
-                                                        precision: 2},
-                                                        dataType: 'number'},
-                                                        {caption: 'Add',
-                                                        alignment: 'center',
-                                                        cellTemplate: function(cont, ops){
-                                                            cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}', ${ops.data.price});">+</div>`);} }], dataSource: articles,
-                                                        onRowDblClick: (elem)=> add_article_to_order(elem.data.id, elem.data.code, elem.data.description, elem.data.price)});
-                        instanceGridArticles = $('#grid-articulos').dxDataGrid('instance');
-                    }, error => {
-                        alert('error al buscar artículos');
-                    }
-                );
-            });
-
-            validator_warehouse = $('#detail-warehouse-container').dxValidationGroup({});
-            validator_sucursal = $('#detail-sucursal-container').dxValidationGroup({});
-            validator_associatedCompany = $('#detail-associatedcompany-container').dxValidationGroup({});
-
-            $.get('/api/v1/warehouses').then(resp=> {
-                $('#cmb-warehouses').dxLookup({ dataSource: resp,
-                                                displayExpr: 'code',
-                                                valueExpr: 'id',
-                                                placeholder: 'Seleccione el almacen',
-                                                title: 'Warehouse',
-                                                name: 'warehouse'})
-                                    .dxValidator({validationRules: [
-                                                    {type: 'required',
-                                                    message: 'Field Required'}],
-                                                  validationGroup: validator_warehouse});
-
-            });
-
-            $('#reference-input').dxTextBox({name: 'reference', 
-                                            placeholder: 'Introduzca la referenia. Ej: OU008236-CH03'})
-                                 .dxValidator({validationRules: [
-                                                    {type: 'required', 
-                                                    message: 'Field Required'}], 
-                                               validationGroup: validator_sucursal});
-
-            $('#sucursal-code-input').dxTextBox({name: 'sucursal_code',
-                                                 placeholder: 'Introduzca el código de la sucursal'})
-                                     .dxValidator({validationRules: [{type: 'required', 
-                                                                      message:'Sucursal Code Required'}], 
-                                                  validationGroup: validator_sucursal});
-
-            $('#reference-associated-input').dxTextBox({name: 'reference',
-                                                        placeholder: 'Ej, OU51214-CH03'})
-                                            .dxValidator({validationRules: [{type: 'required',
-                                                                            message:'Member Code Required'}], 
-                                                        validationGroup: validator_associatedCompany});
-
-
-            $('#member-code-input').dxTextBox({name: 'member_code',
-                                               placeholder: 'Introduzca el código del socio'})
-                                    .dxValidator({validationRules: [{type: 'required', 
-                                                                    message:'Member Code Required'}], 
-                                                validationGroup: validator_associatedCompany});
-
-           
-        </script>
-
+       {% include 'javascripts.html' %}
 
         {% block scripts_js %} {% endblock scripts_js %}
     </body>
