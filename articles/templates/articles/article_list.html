@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+	<h1>Listado de artículos</h1>
+	<hr>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Code</th>
+				<th>Description</th>
+				<th>Price</th>
+				<th>Details</th>
+				<th>Update</th>
+				<th>Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article in object_list %}
+				<tr>
+					<td>{{ article.pk }}</td>
+					<td>{{article.code}}</td>
+					<td>{{article.description}}</td>
+					<td>{{article.price}}</td>
+					<td> <a href="{% url 'article-show' article.pk %}" class="btn-sm btn-warning">Details</a> </td>
+					<td> <a href="{% url 'article-update' article.pk %}" class="btn-sm btn btn-info">Update</a> </td>
+					<td> <a href="{% url 'article-delete' article.pk %}" class="btn-sm btn btn-danger">Delete</a> </td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

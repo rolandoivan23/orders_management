@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+	<div class="row">
+		<div class="col-sm-12 col-md-8 offset-md-2">
+		    <div class="row">
+		    	<div class="col-sm-10 col-md-8">
+					<h1>Detalles del artículo</h1>
+		    	</div>
+		    	<div class="col-sm-2 col-md-4">
+
+					<a href="{% url 'article-update' article.pk %}" class="btn btn-info float-end">Editar</a>    		
+		    	</div>
+		    </div>
+			<hr>
+			<p>
+				<span><b>Code:</b></span>
+				{{article.code}}
+			</p>
+			<p>
+				<span><b>Description:</b></span>
+				{{article.description}}
+			</p>
+			<p>
+				<span><b>Price:</b></span>
+				{{article.price}}
+			</p>
+			<p>
+				<div><b>Vendors</b></div>
+				<ul>
+					{% if article.vendors.count %}
+						{% for vendor in article.vendors.all %}
+							<li>{{ vendor.name }}</li>
+						{% endfor%}
+					{% else %}
+						<li>Without Vendors</li>
+					{% endif %}
+				</ul>
+			</p>
+		</div>
+	</div>
+
+
+{% endblock %}

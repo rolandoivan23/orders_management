@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+	{% include 'articles/form.html' with type="create" %}
+{% endblock %}
+
+{% block scripts_js %}
+	<script>
+		$('form input, form textarea, form select').addClass('form-control');
+		$('form input[type="submit"]').addClass('btn btn-success');
+		$('form select').required(false);
+	</script>
+{% endblock scripts_js %}
