@@ -1,0 +1,82 @@
+{% extends "easy_pdf/base.html" %}
+{% load humanize %}
+{% block extra_style %}
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+
+    <style type="text/css">
+        @page {
+        	size: letter;
+		    margin: 0.5cm;
+		}
+        
+    </style>
+{% endblock %}
+
+{% block content%}
+	
+	<h1>Order Number: {{order.order_number}} </h1>
+	<hr>
+	<h2>Order Type</h2>
+	<div>
+		{{order.order_type.name}} - {{order.order_type.description}}
+	</div>
+
+	<h3>Details</h3>
+	{% if order.order_type_id == 1%}
+		Almacen: {{order.distribution_center_details.warehouse.code}}
+	{% elif order.order_type_id == 2 %}
+		<div>Reference: {{order.branch_office_details.reference}}</div>
+		<div>Sucursal code: {{order.branch_office_details.branch_office_code}}</div>
+
+	{% elif order.order_type_id == 3 %}
+		<div>Reference: {{order.associated_company_details.reference}}</div>
+		<div>Partner code: {{order.associated_company_details.partner_code}} </div>
+	{% endif%}
+
+	<h2>Customer information</h2>
+	<table>
+		<tr>
+			<td>
+				<div>
+					<b>Customer Name:</b> {{ order.customer.name }}
+				</div>
+				<div>	
+					<b>Customer Address:</b> {{ order.customer.address }}
+				</div>
+			</td>
+			<td style="text-align: right; padding-right: 30px;">
+				<div style="vertical-align: top;">
+					<b>Customer Type:</b> {{ order.customer.tipo_cliente.name }}
+				</div>
+				
+			</td>
+		</tr>
+	</table>
+
+	<table style="margin-top: 20px;">
+			<thead>
+				<tr>
+					<th>Code</th>
+					<th>Description</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Subtotal</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for order_detail in order.articles_details.all %}
+					<tr>
+						<td>{{order_detail.article.code}}</td>
+						<td>{{order_detail.article.description}}</td>
+						<td>{{order_detail.article.price}}</td>
+						<td>{{order_detail.quantity}}</td>
+						<td style="text-align: center;">
+							${{order_detail.subtotal}}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>	
+		
+		<h2 style="text-align: right; margin-right: 85px; margin-top: 25px;">Total: ${{ total | intcomma }}</h2>
+{% endblock %}

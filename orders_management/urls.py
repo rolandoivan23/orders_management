@@ -22,7 +22,7 @@ from catalogs.views import *
 
 from rest_framework.routers import SimpleRouter
 
-from orders.views import OrdersViewSet, dashboard
+from orders.views import OrdersViewSet, dashboard, OrderPDF
 
 router = SimpleRouter()
 router.register(r'orders', OrdersViewSet)
@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^save_order$', save_order, name = 'save_order'),
     url(r'^orders_report$', orders_report, name = 'orders_report'),
     url(r'^dashboard$', dashboard, name = 'dashboard'),
+    url(r'^orders/(?P<order_id>\d+)/pdf$', OrderPDF.as_view(), name="order_pdf"),
     url(r'^', include('articles.urls', namespace='articles')),
     url(r'^', include('catalogs.urls', namespace='catalogs')),
     url(r'^', include('vendors.urls', namespace='vendors')),

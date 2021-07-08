@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'easy_pdf',
+    'django.contrib.humanize',
     'django_extensions',
     'articles',
     'catalogs',

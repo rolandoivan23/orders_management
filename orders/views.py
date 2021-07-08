@@ -1,7 +1,9 @@
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, Sum, F
 from django.shortcuts import render
 from django.core import serializers
 from django.http import JsonResponse
+
+from easy_pdf.views import PDFTemplateView
 
 import json
 import functools
@@ -97,3 +99,33 @@ def dashboard(request):
 						 'pendding_orders_count': pendding_orders,
 						 'delivery_percentaje': delivery_percentaje
 						 })
+
+class OrderPDF(PDFTemplateView):
+	template_name = "orders/pdfs/order_pdf.html"
+
+	def get_context_data(self, order_id, **kwargs):
+		orders = (Order.objects.
+					select_related('customer', 'order_type', 'customer__tipo_cliente')
+					.prefetch_related(
+						Prefetch('articles_details', 
+							queryset = ArticlesOrder.objects
+								.annotate(subtotal = Sum(F('quantity') * F('article__price')))
+								.all().select_related('article') ) )
+					.filter(pk = order_id)
+				 )
+		
+		total = (orders.aggregate(total = Sum(F('articles_details__quantity') 
+											* F('articles_details__article__price'))
+								 )['total']
+
+				)
+
+		#Se usa el filter en vez del get para poder hacer la operación de total 
+		#Todo: Almacenar los subtotales en la base de datos en la table de articles_details y el total en la de orden
+		order = orders[0]
+		context = {
+			'order': order,
+			'total': total
+		}
+
+		return super(OrderPDF, self).get_context_data(**context)
