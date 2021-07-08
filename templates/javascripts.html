@@ -13,10 +13,9 @@
     let articles = [];
     let instanceGridArticles = null;
     let validator_warehouse, validator_sucursal, validator_associatedCompany;
-    $(function () {
+    
         $.get('/api/v1/orders/?urgent=True&order_type_id=1&deliver_date__isnull=True&customer__tipo_cliente_id=4').then(function(resp){
             let data = resp;
-            console.log(data);
            
             $("#buttonContainer").dxDataGrid({
                 columns: [{dataField: 'order_number', alignment:'center'}, {dataField: 'order_type',  caption: 'Type', alignment: 'center'}, 'customer', {dataField: 'created_date', alignment: 'center'}, {dataField: 'deliver_date', alignment: 'center'}, {dataField:'urgent', allowSort: true, sortOrder: 'desc'}, {dataField: 'num_articles', caption: 'Num. artículos', alignment: 'center', width: '100px'}],
@@ -121,7 +120,7 @@
                             <td>${quantity*price}</td> \
                         </tr>`);
                         let total_elem = $('#total-container #total-value');
-                        total_elem.html(parseFloat((total_elem.html()) + quantity*price).toFixed(2))
+                        total_elem.html((parseFloat(total_elem.html()) + quantity*price).toFixed(2));
                         order_articles.push({article_id: article_id, quantity: quantity});
                         articles.length = 0;
                         let index;
@@ -213,6 +212,5 @@
                  });
             }
         }           
-    });
 
 </script>
