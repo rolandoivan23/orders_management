@@ -16,4 +16,4 @@ class Article(models.Model):
 		return "%s  -  %s" % (self.code, self.description)
 
 	def get_absolute_url(self):
-	        return reverse('article-show', kwargs={'pk': self.pk})
+	        return reverse('articles:article-show', kwargs={'pk': self.pk})

@@ -7,11 +7,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .forms import ArticleForm
 from .models import *
-from .serializers import *
-# Create your views here.
-class ArticlesViewSet(viewsets.ModelViewSet):
-	queryset = Article.objects.all()
-	serializer_class = ArticleSerializer
 
 class ArticleListView(ListView):
     model = Article
@@ -21,6 +16,7 @@ class ArticleDetailView(DetailView):
 
 class ArticleCreateView(CreateView):
 	model = Article
+	namespace = 'articles'
 	#fields = ['code', 'description', 'price']
 	form_class = ArticleForm
 	
@@ -32,4 +28,4 @@ class ArticleUpdateView(UpdateView):
 
 class ArticleDeleteView(DeleteView):
     model = Article
-    success_url = reverse_lazy('articles-list')
+    success_url = reverse_lazy('articles:articles-list')
