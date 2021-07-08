@@ -12,6 +12,7 @@
  <script>
     let articles = [];
     let instanceGridArticles = null;
+    let articlesDS;
     let validator_warehouse, validator_sucursal, validator_associatedCompany;
     
         $.get('/api/v1/orders/?urgent=True&order_type_id=1&deliver_date__isnull=True&customer__tipo_cliente_id=4').then(function(resp){
@@ -37,9 +38,11 @@
         $.get('/api/v1/articles').then(
             resp => {
                 articles = resp;
+                articlesDS = new DevExpress.data.DataSource({store: articles});
                 $('#grid-articulos').dxDataGrid({noDataText: 'Sin artículos',
                                                 filterRow: {visible: true},
                                                 height: '225px',
+                                                dataSource: articlesDS,
                                                 columns: ['code',
                                                 'description',
                                                 {dataField:'price',
@@ -49,7 +52,7 @@
                                                 {caption: 'Add',
                                                 alignment: 'center',
                                                 cellTemplate: function(cont, ops){
-                                                    cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}', ${ops.data.price});">+</div>`);} }], dataSource: articles,
+                                                    cont.append(`<div class='btn btn-outline-dark btn-sm' onclick="add_article_to_order(${ops.data.id}, '${ops.data.code}', '${ops.data.description}', ${ops.data.price});">+</div>`);} }], 
                                                 onRowDblClick: (elem)=> add_article_to_order(elem.data.id, elem.data.code, elem.data.description, elem.data.price)});
                 instanceGridArticles = $('#grid-articulos').dxDataGrid('instance');
             }, error => {
@@ -122,10 +125,9 @@
                         let total_elem = $('#total-container #total-value');
                         total_elem.html((parseFloat(total_elem.html()) + quantity*price).toFixed(2));
                         order_articles.push({article_id: article_id, quantity: quantity});
-                        articles.length = 0;
                         let index;
-                        articles.find((elem, i)=>{index = i; elem.id == article_id});
-                        articles.slice(index, 1);
+                        articles.find((elem, i)=>{index = i; if(elem.id == article_id){ return true;}  });
+                        articles.splice(index, 1);
                         instanceGridArticles.refresh();
 
                     }else if(quantity != null){
