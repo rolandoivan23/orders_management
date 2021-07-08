@@ -26,8 +26,6 @@ from orders.views import OrdersViewSet, dashboard
 
 router = SimpleRouter()
 router.register(r'orders', OrdersViewSet)
-router.register(r'order_types', OrderTypeViewSet)
-router.register(r'warehouses', WarehouseViewSet)
 
 urlpatterns = [
     path(r'', make_order),
@@ -37,5 +35,6 @@ urlpatterns = [
     url(r'^orders_report$', orders_report, name = 'orders_report'),
     url(r'^dashboard$', dashboard, name = 'dashboard'),
     url(r'^', include('articles.urls', namespace='articles')),
+    url(r'^', include('catalogs.urls', namespace='catalogs')),
     url(r'api/v1/', include(router.urls)),
 ]
