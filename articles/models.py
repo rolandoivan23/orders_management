@@ -9,7 +9,7 @@ class Article(models.Model):
 	id = models.AutoField(primary_key = True)
 	code = models.CharField(max_length = 10)
 	description = models.TextField(null = True)
-	vendors = models.ManyToManyField(Vendor, related_name = 'articles')
+	vendors = models.ManyToManyField(Vendor)
 	price = models.DecimalField(decimal_places = 4, max_digits = 12)
 
 	def __str__(self):

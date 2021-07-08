@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{%block contenido%}	
+{% include 'vendors/form.html' with type="update" %}
+{%endblock%}
+
+{% block scripts_js %}
+	<script>
+		$('form input, form textarea, form select').addClass('form-control');
+		$('form input[type="submit"]').addClass('btn btn-success');
+	</script>
+{% endblock scripts_js %}

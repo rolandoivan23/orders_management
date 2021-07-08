@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+	<h1>Listado de proveedores</h1>
+	<hr>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Address</th>
+				<th>Details</th>
+				<th>Update</th>
+				<th>Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for vendor in object_list %}
+				<tr>
+					<td>{{ vendor.pk }}</td>
+					<td>{{vendor.name}}</td>
+					<td>{{vendor.address}}</td>
+					<td> <a href="{% url 'vendors:vendor-show' vendor.pk %}" class="btn-sm btn-warning">Details</a> </td>
+					<td> <a href="{% url 'vendors:vendor-update' vendor.pk %}" class="btn-sm btn btn-info">Update</a> </td>
+					<td> <a href="{% url 'vendors:vendor-delete' vendor.pk %}" class="btn-sm btn btn-danger">Delete</a> </td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

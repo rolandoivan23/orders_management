@@ -16,7 +16,6 @@ class ArticleDetailView(DetailView):
 
 class ArticleCreateView(CreateView):
 	model = Article
-	namespace = 'articles'
 	#fields = ['code', 'description', 'price']
 	form_class = ArticleForm
 	

@@ -36,5 +36,6 @@ urlpatterns = [
     url(r'^dashboard$', dashboard, name = 'dashboard'),
     url(r'^', include('articles.urls', namespace='articles')),
     url(r'^', include('catalogs.urls', namespace='catalogs')),
+    url(r'^', include('vendors.urls', namespace='vendors')),
     url(r'api/v1/', include(router.urls)),
 ]
