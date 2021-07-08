@@ -93,7 +93,7 @@
                                                                   message:'Sucursal Code Required'}], 
                                               validationGroup: validator_sucursal});
 
-        $('#reference-associated-input').dxTextBox({name: 'reference',
+        $('#reference-associated-input').dxTextBox({name: 'reference_ac',
                                                     placeholder: 'Ej, OU51214-CH03'})
                                         .dxValidator({validationRules: [{type: 'required',
                                                                         message:'Member Code Required'}], 
@@ -200,8 +200,8 @@
                        data.sucursal_code = $('input[name=sucursal_code]')[0].value;
                  }
                  if(parseInt($('input[name=order_type]:checked')[0].value) == 3  ){
-                       data.reference =  $('input[name=reference]')[0].value;
-                       data.partner_code = $('input[name=sucursal_code]')[0].value;
+                       data.reference =  $('input[name=reference_ac]')[0].value;
+                       data.partner_code = $('input[name=member_code]')[0].value;
                  }
 
                  $.post('/save_order', data).then(resp => {
