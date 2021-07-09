@@ -103,9 +103,27 @@ def dashboard(request):
 class OrderPDF(PDFTemplateView):
 	template_name = "orders/pdfs/order_pdf.html"
 
-	def get_context_data(self, order_id, **kwargs):
+	def get_context_data(self, order_id, order_type_id, **kwargs):
+
+
+		select_related_relations = []
+		if order_type_id == 1:
+			select_related_relations.append('distribution_center_details')
+			print('entra')
+		elif order_type_id == 2:
+			select_related_relations.append('branch_office_details')
+			print('entra')
+		elif order_type_id == 3:
+			select_related_relations.append('associated_company_details')
+			print('entra')
+
+
+
 		orders = (Order.objects.
-					select_related('customer', 'order_type', 'customer__tipo_cliente')
+					select_related('customer', 
+								   'order_type', 
+								   'customer__tipo_cliente',
+								   *select_related_relations)
 					.prefetch_related(
 						Prefetch('articles_details', 
 							queryset = ArticlesOrder.objects
