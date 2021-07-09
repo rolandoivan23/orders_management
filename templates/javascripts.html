@@ -71,7 +71,15 @@
                                             valueExpr: 'id',
                                             placeholder: 'Seleccione el almacen',
                                             title: 'Warehouse',
-                                            name: 'warehouse'})
+                                            name: 'warehouse',
+                                            showCancelButton: false,
+                                            showPopupTitle: false,
+                                            stylingMode: 'filled',
+                                            animation: {show: {
+                                                type: 'pop',
+                                                duration: 250
+                                            }}
+                                         })
                                 .dxValidator({validationRules: [
                                                 {type: 'required',
                                                 message: 'Field Required'}],
@@ -114,6 +122,7 @@
 
             alertify.prompt( 'Artículos a agregar', '', 
                 function(evt, value) { 
+                    let index;
                     quantity = value;
                     if(parseInt(quantity) > 0){
                         $('#articles-order-table tbody').append(`<tr>\
@@ -126,7 +135,6 @@
                         let total_elem = $('#total-container #total-value');
                         total_elem.html((parseFloat(total_elem.html()) + quantity*price).toFixed(2));
                         order_articles.push({article_id: article_id, quantity: quantity});
-                        let index;
                         articles.find((elem, i)=>{index = i; if(elem.id == article_id){ return true;}  });
                         articles.splice(index, 1);
                         instanceGridArticles.refresh();
@@ -219,7 +227,8 @@
         function print_order(){
             let [order_id, order_type_id] = [$('#order-number-value').html(),
                                             $('input[name=order_type]:checked')[0].value];
-            window.open(`/pdf_order/${order_id}/type/${order_type_id}`, "_blank", '' );
+            window.open(`/pdf_order/${order_id}/type/${order_type_id}`, 
+                        "_blank", '');
         }          
 
 </script>
