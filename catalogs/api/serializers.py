@@ -10,3 +10,8 @@ class WarehouseSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Warehouse
 		exclude = []
+
+class CustomerTypeSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomerType
+		exclude = []

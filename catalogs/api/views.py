@@ -11,3 +11,7 @@ class OrderTypeViewSet(viewsets.ModelViewSet):
 class WarehouseViewSet(viewsets.ModelViewSet):
 	queryset = Warehouse.objects.all()
 	serializer_class = WarehouseSerializer
+
+class CustomerTypeViewSet(viewsets.ModelViewSet):
+	queryset = CustomerType.objects.all()
+	serializer_class = CustomerTypeSerializer
