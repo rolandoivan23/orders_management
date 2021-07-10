@@ -5,7 +5,7 @@ class VendorForm(ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		print(self.fields)
+		self.fields['articles'].required = False
 
 	class Meta:
 		model = Vendor
