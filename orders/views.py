@@ -1,6 +1,7 @@
 from django.db.models import Count, Prefetch, Sum, F
 from django.shortcuts import render
 from django.core import serializers
+from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 
 from easy_pdf.views import PDFTemplateView
@@ -14,6 +15,7 @@ from articles.models import Article
 
 from orders.models import *
 from orders.serializers import *
+from io import StringIO
 # Create your views here.
 
 class OrdersViewSet(viewsets.ModelViewSet):
@@ -42,8 +44,14 @@ def save_order(request):
 		order_type_id = int(request.POST.get('order_type_id', -1))
 		warehouse_id = int(request.POST.get('warehouse_id', -1))
 		isUrgent = True if request.POST.get('urgent') == "true" else False
-		order = Order(order_type_id = order_type_id, order_number = Order.objects.count() + 1, customer_id = 1, urgent = isUrgent)
-		order.save()
+		order = None
+		errors = None
+		order = Order(order_type_id = order_type_id,
+					  order_number = Order.objects.count() + 1, 
+					  customer_id = 1, 
+					  urgent = isUrgent)
+		validate_model_instance(order)
+
 		response = {
 			'order_number': order.order_number,
 			'urgent': order.urgent,
@@ -51,14 +59,19 @@ def save_order(request):
 		}
 		for article in json.loads(request.POST.get('articles')):
 			#print(article['quantity'])
-			ArticlesOrder.objects.create(order = order, article_id = article['article_id'], quantity = article['quantity'])
+			model_instance = ArticlesOrder(order = order, article_id = article['article_id'], quantity = article['quantity'])
+			validate_model_instance(model_instance)
 
 		if order_type_id == 1:
-			DetailOrderDistributionCenter.objects.create(order = order, warehouse_id = warehouse_id)
+			model_instance = DetailOrderDistributionCenter(order = order, warehouse_id = warehouse_id)
 		elif order_type_id == 2:
-			DetailOrderBranchOffice.objects.create(order = order, reference = request.POST.get('reference'), branch_office_code = request.POST.get('sucursal_code'))
+			model_instance = DetailOrderBranchOffice(order = order, reference = request.POST.get('reference'), branch_office_code = request.POST.get('sucursal_code'))
 		elif order_type_id == 3:
-			DetailOrderAssociatedCompany.objects.create(order = order,reference = request.POST.get('reference'), partner_code = request.POST.get('partner_code'))
+			model_instance = DetailOrderAssociatedCompany(order = order,reference = request.POST.get('reference'), partner_code = request.POST.get('partner_code'))
+		
+		isValid, errors = validate_model_instance(model_instance)
+		if not isValid:
+			return JsonResponse(errors, status = 400, safe = False)
 
 		return JsonResponse(response)
 
@@ -76,6 +89,19 @@ def orders_report(request):
 											'customer__tipo_cliente')
 										)"""
 	return render(request, 'orders/report.html')
+
+def validate_model_instance(instance):
+	isValid = True
+	json_resp = []
+	try:
+		instance.full_clean()
+		instance.save()
+	except ValidationError as e:
+		io = StringIO(str(e).replace("'", '"'))
+		json_resp = json.load(io)
+		isValid = False
+
+	return (isValid, json_resp)
 
 def dashboard(request):
 	orders = Order.objects.all().prefetch_related(

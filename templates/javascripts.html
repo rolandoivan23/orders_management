@@ -14,6 +14,7 @@
     let instanceGridArticles = null;
     let articlesDS;
     let validator_warehouse, validator_sucursal, validator_associatedCompany;
+    let errors_json;
     
         $.get('/api/v1/orders/?urgent=True&order_type_id=1&deliver_date__isnull=True&customer__tipo_cliente_id=4').then(function(resp){
             let data = resp;
@@ -213,11 +214,26 @@
                  }
 
                  $.post('/save_order', data).then(resp => {
-                    DevExpress.ui.notify('Orden guardada. No. Orden: ' + resp.order_number, 'success');
+                    $('#errors-containerr').html('');
+                    $('#errors-containerr').hide('fast');
+                    DevExpress.ui.notify('Orden guardada. No. Orden: ' + resp.
+                        order_number, 'success');
                     $('#order-number-value').html(resp.order_number);
                     $('#order-number-container').css('display', 'block');
                     $('#btn-make-order').hide('slow');
                  }, error => {
+                    let errors_html_str = "<strong style=\"color: #484646;\" >Errors list</strong><hr style=\"margin: 0;\"/>";
+                    let errors_containter = $('#errors-containerr');
+                    for(let field of Object.keys(error.responseJSON)){
+                        errors_html_str += `<div> <b>${field}</b> <ul>`;
+                        for(let e of error.responseJSON[field]){
+                            errors_html_str += `<li>${e}</li>`;
+                        }
+                        errors_html_str += '</ul></div>';
+                    }
+
+                    errors_containter.show('fast');
+                    errors_containter.html(errors_html_str);
                     console.error('Error al guardar la orden. ' + error);
                     alertify.error('Error al guardar');
                  });
