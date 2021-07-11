@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'vendors'
 ]
 
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -87,6 +89,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'TEST': {
+           'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
 }
 
