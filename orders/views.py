@@ -44,6 +44,10 @@ def save_order(request):
 		order_type_id = int(request.POST.get('order_type_id', -1))
 		warehouse_id = int(request.POST.get('warehouse_id', -1))
 		isUrgent = True if request.POST.get('urgent') == "true" else False
+		articles = request.POST.get('articles')
+		if articles is None:
+			return JsonResponse({"articles": "No articles added"}, status = 400)
+
 		order = None
 		errors = None
 		order = Order(order_type_id = order_type_id,
@@ -57,7 +61,7 @@ def save_order(request):
 			'urgent': order.urgent,
 			'order_type': order.order_type.name
 		}
-		for article in json.loads(request.POST.get('articles')):
+		for article in json.loads(articles):
 			#print(article['quantity'])
 			model_instance = ArticlesOrder(order = order, article_id = article['article_id'], quantity = article['quantity'])
 			validate_model_instance(model_instance)

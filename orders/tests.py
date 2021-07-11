@@ -61,3 +61,11 @@ class OrdersReport(TestCase):
 		decoded_resp = json.loads(response.content.decode())
 		del decoded_resp['order_number']
 		self.assertEqual(decoded_resp, excpected_response)
+		
+		data = {
+			"order_type_id": "1",
+			"urgent": "true",
+			"warehouse_id": "1"
+		}
+		response = Client().post(reverse('save_order'), data)  
+		self.assertEqual(response.status_code, 400)
