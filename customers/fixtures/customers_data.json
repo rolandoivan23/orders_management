@@ -1,0 +1,1 @@
+[{"model": "customers.customer", "pk": 1, "fields": {"name": "Rolando Vázquez", "code": "C01CH02", "address": "Las lajas 2626", "tipo_cliente": 4}}]
