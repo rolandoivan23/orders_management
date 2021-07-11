@@ -37,8 +37,11 @@ Recibe 2 cadenas como parámetro y verifica que estas sean iguales una vez que s
 transforma la cadena de nombre de un registro de un catálogo, ya transformado el 
 nombre debe de ser igual que la llave(campo key) del registro introducido.
 """
-def check_key_pattern(key, name):
+def check_key_pattern(key, name, raise_exception = True):
 	cleaned_name = name.replace(' ', '_').lower().strip()
-	if not key == cleaned_name:
-		 raise ValidationError({"key": 'Key pattern not match respect name'})
+	if not key.lower().strip() == cleaned_name:
+		if raise_exception:
+			raise ValidationError({"key": 'Key pattern not match respect name'})
+		else:
+			return False
 	return True

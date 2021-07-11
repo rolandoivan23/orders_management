@@ -10,7 +10,7 @@ from django.core.validators import *
 Regex paa patron donde los primeros 2 caracteres deben de ser una letra de la a a la z 
 y los siguientes caracteres cualquier valor numérico valido
 """
-REFERENCE_FIELD_REGEX = RegexValidator(r'[A-Za-z]{2}[0-9]$', 'Formato de referencia incorrecto')
+REFERENCE_FIELD_REGEX = RegexValidator(r'[A-Za-z]{2}[0-9]', 'Formato de referencia incorrecto')
 
 # Create your models here.
 class Order(models.Model):

@@ -66,8 +66,33 @@ class CatalogsTest(TestCase):
 										   sorted_types[i]['id'] )
 							)
 
-	def test_patter_key_match(self):
-		order_type = OrderType.objects.last()
-		self.assertEqual(check_key_pattern(order_type.key, 
-										   order_type.name),
+	def test_check_key_pattern(self):
+		raise_exception = False
+
+		self.assertEqual(check_key_pattern('esta_es_una_cadena_cualquiera',
+										   'Esta es una cadena cualquiera',
+										   raise_exception),
 										   True) 
+		self.assertEqual(check_key_pattern('esta_es_una_cadena_cualquiera',
+										   'Esta es una cadena cualquiera',
+										   raise_exception),
+										   True) 
+		self.assertEqual(check_key_pattern('   esta_es_una_cadena_cualquiera',
+										   'Esta es una cadena cualquiera',
+										   raise_exception),
+										   True) 
+		
+		#Negative cases
+		self.assertEqual(check_key_pattern('esta_es_una_cadena_cualquiera',
+										   'Esta es_una cadena cualquiera  ',
+										   raise_exception),
+										   False) 
+		self.assertEqual(check_key_pattern('   esta_es_una_cadena_cualquiera',
+										   '    Esta es_una cadena cualquiera  ',
+										   raise_exception),
+										   False) 
+		self.assertEqual(check_key_pattern('esta_es_una_cadena_cualquiera',
+										   'Esta es_una cadena cualquieraEsta es_una cadena cualquiera',
+										   raise_exception),
+										   False) 
+
