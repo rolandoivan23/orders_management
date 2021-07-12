@@ -1,0 +1,1 @@
+[{"model": "vendors.vendor", "pk": 1, "fields": {"name": "Vendor 1", "address": "Just for testing", "articles": []}}]
