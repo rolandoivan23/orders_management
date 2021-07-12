@@ -66,6 +66,10 @@ class CatalogsTest(TestCase):
 										   sorted_types[i]['id'] )
 							)
 
+	def test_warehouse_1_exists(self):
+		warehouse_exists = Warehouse.objects.filter(pk = 1).exists()
+		self.assertTrue(warehouse_exists)
+
 	def test_check_key_pattern(self):
 		raise_exception = False
 

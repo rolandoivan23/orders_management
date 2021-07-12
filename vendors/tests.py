@@ -4,6 +4,6 @@ from vendors.models import *
 # Create your tests here.
 class VendorsTest(TestCase):
 
-	def test_vendor_1_exists(self):
-		vendors_exists = Vendor.objects.filter(pk = 1).exists()
-		self.assertTrue(vendors_exists)
+	def test_articles_assigned_at_least_one_vendor(self):
+		vendors_with_articles = Vendor.objects.exclude(articles = None).count()
+		self.assertGreater(vendors_with_articles, 0)
