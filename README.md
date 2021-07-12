@@ -14,4 +14,5 @@ python manage.py migrate
 -Popular base de datos
 El orden de las aplicaciones es importante para la integridad de los datos, en otro orden puede fallar el loaddata
 python manage.py loaddata catalogs customers vendors articles
-
+-Correr las pruebas
+	python manage.py test --keepdb
