@@ -1,7 +1,7 @@
 # orders_management
 
 Este proyecto es para la generación y manejo de ordenes, así como sus derivados como
-artículos, clientes, provvedores, manejo de catalogos etc.
+artículos, clientes, proveedores, manejo de catalogos etc.
 El proyecto implementa una interfaz de usuario para lo descrito anteriormente, pero 
 también expone un api para poder consumir o crear recursos desde otros clientes que 
 no sean necesariamente un navegador web, como por ejemplo una aplicación mobile 
@@ -21,6 +21,9 @@ nativa.
 
 -Instalar dependencias
 
+	En este punto es probable que se requieran algúnas librerías del 
+	sistema operativo dónde corre el sistema.
+	TODO: Listar librerías requeridas
 	pip install requirements.txt
 
 -Crear base de datos
