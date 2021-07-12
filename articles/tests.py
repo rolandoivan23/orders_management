@@ -15,4 +15,8 @@ class AtriclesTests(TestCase):
 		self.assertTrue(article_url != "/article/%d" % (article.pk,))
 		self.assertTrue(article_url != "article/%d/" % (article.pk,))
 		self.assertTrue(article_url != "article/%d" % (article.pk,))
+
+	def test_article_1_exists(self):
+		article_exists = Article.objects.filter(pk = 1).exists()
+		self.assertTrue(article_exists)
 		
