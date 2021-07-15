@@ -70,6 +70,31 @@
                 background: rgba(123, 123, 128, 1);
               }
 
+              #main-navbar ul li#catalogs-menu-li{
+                  list-style-type: none;
+                  display: inline-block;
+                  width: 180px;
+                  padding: 3px;
+                  margin: 7px 10px;
+                  text-align: center;
+                  max-height: 28px;
+              }
+
+              #catalogs-menu-li .dropdown-item{
+                background: transparent;
+                font-weight: 200px;
+                color: #696957;
+              }
+
+              #catalogs-menu-li .dropdown-menu a{
+                background: transparent;
+              }
+
+              #catalogs-menu-li .dropdown-menu li{
+                background: transparent;
+              }
+
+
               #print-btn{
                 border: 1px solid #ccc;
                 margin-bottom: 15px;
@@ -93,12 +118,37 @@
                 margin-bottom: 10px;
                 display: none;
               }
+
+              .dropdown-item{
+                background-color: transparent;
+                border: 1px solid #ccc
+              }
         </style>
          <nav id="main-navbar" style="margin-top: -46px;">
               <ul>
                 <li>  <a href="{% url 'make_order' %}">Hacer Pedido</a>  </li>
                 <li>  <a href="{% url 'orders_report' %}">Reporte de Ordenes</a>   </li>
+                <li>  <a href="{% url 'articles:articles-list' %}">Artículos</a>   </li>
+                <li>  <a href="{% url 'vendors:vendors-list' %}">Proveedores</a>   </li>
+
+                <li id="catalogs-menu-li">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                      Catálogos
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      <li><a class="dropdown-item" href="#">Tipo de clientes</a></li>
+                      <li><a class="dropdown-item" href="#">Tipo de ordenes</a></li>
+                      <li><a class="dropdown-item" href="#">Almacenes</a></li>
+                    </ul>
+                  </div>
+                  
+                </li>
+
               </ul>
+
+
+
             </nav>
         <div class="content">
             {% block contenido %}{% endblock contenido %}
