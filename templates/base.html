@@ -86,11 +86,20 @@
                 color: #696957;
               }
 
+              #catalogs-menu-li .dropdown-item:hover{
+                background: transparent;
+                border: 1px solid #111;
+              }
+
               #catalogs-menu-li .dropdown-menu a{
                 background: transparent;
               }
-
+              
               #catalogs-menu-li .dropdown-menu li{
+                background: transparent;
+              }
+
+              #catalogs-menu-li .dropdown-menu li:hover{
                 background: transparent;
               }
 
@@ -123,6 +132,11 @@
                 background-color: transparent;
                 border: 1px solid #ccc
               }
+
+              .dropdown-item{
+                background-color: transparent;
+                border: 1px solid #ccc
+              }
         </style>
          <nav id="main-navbar" style="margin-top: -46px;">
               <ul>
@@ -144,11 +158,7 @@
                   </div>
                   
                 </li>
-
               </ul>
-
-
-
             </nav>
         <div class="content">
             {% block contenido %}{% endblock contenido %}
